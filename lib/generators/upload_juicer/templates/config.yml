@@ -1,0 +1,15 @@
+defaults: &defaults
+  api_key: <%= api_key_fetcher %>
+  s3:
+    access_key_id: yourkeyhere
+    secret_access_key: yoursecretkeyhere
+    bucket: yourbucketnamehere
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
