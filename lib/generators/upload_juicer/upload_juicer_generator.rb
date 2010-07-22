@@ -14,7 +14,7 @@ class UploadJuicerGenerator < Rails::Generators::Base
   class_option :heroku, :type => :boolean, :desc => "Use the Heroku addon to provide your Juicer API key"
   
   def self.source_root
-    @source_root ||= File.join(File.dirname(__FILE__), 'templates')
+    @source_root ||= File.join(File.dirname(__FILE__), '..', '..', '..', 'generators', 'upload_juicer', 'templates')
   end
 
   def self.next_migration_number(dirname)

@@ -4,7 +4,7 @@ require 'ostruct'
 
 module UploadJuicer
   API_URL = 'http://app.uploadjuicer.com/jobs'
-  VERSION = '0.9.1'
+  VERSION = '0.9.2'
   
   Config = OpenStruct.new
   

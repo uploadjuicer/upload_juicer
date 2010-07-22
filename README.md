@@ -48,7 +48,7 @@ API key) to the `info` method. The return hash would look exactly like the
 hash you got back from `submit`, but hopefully the status will now be
 "finished" rather than "queued" (or "failed").
 
-# Using Juicer with Rails 3
+# Using Juicer with Rails
 
 The intended usage is to have your users upload files directly to S3 via
 swfupload, create an UploadJuicer::Upload record via ajax once the upload is
@@ -118,6 +118,8 @@ the form is submitted to associated the UploadJuicer::Upload with the Person.
 The Uploads helper provides the `swfupload_params` method, which does all the
 request signing, etc. that S3 requires.
 
+By the way, for Rails 2 change that `<%= form_for` to `<% form_for`.
+
 ### app/models/person.rb
 
     class Person < ActiveRecord::Base
@@ -144,7 +146,7 @@ partitioned paths for the files in your S3 bucket like so:
     Avatar:   http://s3.amazonaws.com/your_bucket/34j/e8r/9fu/avatar/file_name.jpg
     Thumb:    http://s3.amazonaws.com/your_bucket/34j/e8r/9fu/thumb/file_name.jpg
 
-### app/views/person/show.html.erb
+### app/views/people/show.html.erb
 
     <h1><%= @person.name %></h1>
     <p>Avatar: <%= image_tag(@person.image.url(:avatar)) %></p>
@@ -153,3 +155,42 @@ partitioned paths for the files in your S3 bucket like so:
     
 This view shows how to get the publicly-readable S3 URLs from the
 UploadJuicer::Upload record associated with the Person.
+
+Just for completeness' sake, here's a minimal People controller, and a sample
+layout that includes jquery and the two yields the new view needs:
+
+### app/controllers/people\_controller.rb
+
+
+    class PeopleController < ApplicationController
+      before_filter :build_person, :only => [ :new, :create ]
+      helper :uploads
+  
+      def create
+        @person.save
+        redirect_to :action => "show", :id => @person
+      end
+  
+      def show
+        @person = Person.find(params[:id])
+      end
+  
+      protected
+  
+        def build_person
+          @person = Person.new(params[:person])
+        end
+    end
+
+### app/views/layouts/application.html.erb
+
+    <html>
+      <head>
+        <%= yield :head %>
+      </head>
+      <body>
+        <%= yield %>
+        <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' %>
+        <%= yield :foot %>
+      </body>
+    </html>    
